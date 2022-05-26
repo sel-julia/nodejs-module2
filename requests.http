@@ -1,0 +1,38 @@
+### get all users
+GET http://localhost:3400/users
+
+### add user
+POST http://localhost:3400/users
+Content-Type: application/json
+
+{
+    "id": "userid2",
+    "login": "loginw",
+    "password": "password123",
+    "age": 12,
+    "isDeleted": false
+}
+
+### get user
+GET http://localhost:3400/users/userid
+
+### update user
+PUT http://localhost:3400/users/userid
+Content-Type: application/json
+
+{
+    "id": "random id",
+    "login": "login_edited",
+    "password": "password_edited2",
+    "age": 122,
+    "isDeleted": false
+}
+
+### delete user
+DELETE http://localhost:3400/users/userid
+
+### get user
+GET http://localhost:3400/users/userid
+
+### get auto suggest users
+GET http://localhost:3400/users/autoSuggestUsers?loginSubstring=log&limit=12
