@@ -1,29 +1,8 @@
 const express = require('express');
 const Joi = require('joi');
+const uuid = require('uuid');
 
 const router = express.Router();
-
-const querySchema = Joi.object({
-    id: Joi.string().required(),
-    login: Joi.string().custom((value, helper) => {
-        const user = users.find(u => u.login === value);
-        if (user === undefined) {
-            return true;
-        }
-
-        return helper.message('There is already a user with the same login in the system');
-    }).required(),
-    password: Joi.string().regex(/([A-Za-z]+[0-9]|[0-9]+[A-Za-z])[A-Za-z0-9]*/).required(),
-    age: Joi.number().min(4).max(130).required(),
-    isDeleted: Joi.boolean().required()
-});
-
-// schema options
-const options = {
-    abortEarly: false, // include all errors
-    allowUnknown: true, // ignore unknown props
-    stripUnknown: true // remove unknown props
-};
 
 const users = [];
 
@@ -31,15 +10,11 @@ router.get('/', (req, res) => {
     res.json(users);
 });
 
-router.post('/', (req, res) => {
-    const { error } = querySchema.validate(req.body, options);
-    if (error) {
-        res.status(404).send(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
-    } else {
-        const body = req.body;
-        users.push(body);
-        res.json(body);
-    }
+router.post('/', validator, (req, res) => {
+    const body = req.body;
+    body.id = uuid.v4();
+    users.push(body);
+    res.json(body);
 });
 
 router.get('/autoSuggestUsers', (req, res) => {
@@ -63,20 +38,15 @@ router.get('/:userId', (req, res) => {
     }
 });
 
-router.put('/:userId', (req, res) => {
+router.put('/:userId', validator, (req, res) => {
     const userId = req.params.userId;
     const body = req.body;
     const userIndex = users.findIndex(i => i.id === userId);
 
     if (userIndex > -1) {
-        const { error } = querySchema.validate(req.body, options);
-        if (error) {
-            res.status(404).send(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
-        } else {
-            body.id = userId;
-            users[userIndex] = body;
-            res.json(body);
-        }
+        body.id = userId;
+        users[userIndex] = body;
+        res.json(body);
     } else {
         res.status(404).send(`User with id ${userId} is not found`);
     }
@@ -88,10 +58,42 @@ router.delete('/:userId', (req, res) => {
 
     if (user === undefined) {
         res.status(404).send(`User with id ${userId} is not found`);
-    } 
+    }
 
     user.isDeleted = true;
     res.end();
 });
+
+// Validation
+
+const querySchema = Joi.object({
+    login: Joi.string().custom((value, helper) => {
+        const user = users.find(u => u.login === value);
+        if (user === undefined) {
+            return value;
+        }
+
+        return helper.message('There is already a user with the same login in the system');
+    }).required(),
+    password: Joi.string().regex(/([A-Za-z]+[0-9]|[0-9]+[A-Za-z])[A-Za-z0-9]*/).required(),
+    age: Joi.number().min(4).max(130).required(),
+    isDeleted: Joi.boolean().required()
+});
+
+// schema options
+const options = {
+    abortEarly: false, // include all errors
+    allowUnknown: true, // ignore unknown props
+    stripUnknown: true // remove unknown props
+};
+
+function validator(req, res, next) {
+    const { error, value } = querySchema.validate(req.body, options);
+    if (error) {
+        return next(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
+    }
+    req.body = value;
+    return next();
+}
 
 module.exports = router;
