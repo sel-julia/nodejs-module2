@@ -1,79 +1,81 @@
-const express = require('express');
-const Joi = require('joi');
-const uuid = require('uuid');
+import express from 'express';
+import Joi from 'joi';
+import { v4 as uuidv4 } from 'uuid';
+import UserRepository from '../data-access/UserRepository';
+import UserService from '../services/UserService';
+import { Op } from 'sequelize';
+import models from '../models';
 
 const router = express.Router();
+const userRepositoryInstance = new UserRepository(models, Op);
+const userService = new UserService(userRepositoryInstance);
 
-const users = [];
-
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const users = await userService.findAll();
     res.json(users);
 });
 
-router.post('/', validator, (req, res) => {
+router.post('/', validator, async (req, res) => {
     const body = req.body;
-    body.id = uuid.v4();
-    users.push(body);
-    res.json(body);
+    body.id = uuidv4();
+    const user = await userService.create(body);
+    res.json(user);
 });
 
-router.get('/autoSuggestUsers', (req, res) => {
+router.get('/autoSuggestUsers', async (req, res) => {
     const loginSubstring = req.query.loginSubstring;
     const limit = req.query.limit;
-    const arr = users
-        .filter(i => i.login.includes(loginSubstring))
-        .sort((a, b) => a.login > b.login ? 1 : -1);
+    const users = await userService.findForAutoSuggest(loginSubstring, limit);
 
-    res.json(arr.slice(0, limit));
+    res.json(users);
 });
 
-router.get('/:userId', (req, res) => {
+router.get('/:userId', async (req, res) => {
     const userId = req.params.userId;
-    const user = users.find(i => i.id === userId);
+    const user = await userService.findById(userId);
 
-    if (user === undefined) {
+    if (user === null) {
         res.status(404).send(`User with id ${userId} is not found`);
     } else {
         res.json(user);
     }
 });
 
-router.put('/:userId', validator, (req, res) => {
+router.put('/:userId', validator, async (req, res) => {
     const userId = req.params.userId;
     const body = req.body;
-    const userIndex = users.findIndex(i => i.id === userId);
+    const user = await userService.findById(userId);
 
-    if (userIndex > -1) {
+    if (user) {
         body.id = userId;
-        users[userIndex] = body;
-        res.json(body);
+        const updatedUser = userService.update(body);
+        res.json(updatedUser);
     } else {
         res.status(404).send(`User with id ${userId} is not found`);
     }
 });
 
-router.delete('/:userId', (req, res) => {
+router.delete('/:userId', async (req, res) => {
     const userId = req.params.userId;
-    const user = users.find(i => i.id === userId);
+    const user = await userService.findById(userId);
 
     if (user === undefined) {
         res.status(404).send(`User with id ${userId} is not found`);
     }
 
-    user.isDeleted = true;
+    userService.delete(user);
     res.end();
 });
 
 // Validation
 
 const querySchema = Joi.object({
-    login: Joi.string().custom((value, helper) => {
+    login: Joi.string().external(async (value) => {
+        const users = await userService.findAll();
         const user = users.find(u => u.login === value);
-        if (user === undefined) {
-            return value;
+        if (user !== undefined) {
+            throw Error('There is already a user with the same login in the system');
         }
-
-        return helper.message('There is already a user with the same login in the system');
     }).required(),
     password: Joi.string().regex(/([A-Za-z]+[0-9]|[0-9]+[A-Za-z])[A-Za-z0-9]*/).required(),
     age: Joi.number().min(4).max(130).required(),
@@ -88,12 +90,9 @@ const options = {
 };
 
 function validator(req, res, next) {
-    const { error, value } = querySchema.validate(req.body, options);
-    if (error) {
-        return next(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
-    }
-    req.body = value;
-    return next();
+    querySchema.validateAsync(req.body, options)
+        .then(() => next())
+        .catch((err) => next(`Validation error: ${err}`));
 }
 
 module.exports = router;
