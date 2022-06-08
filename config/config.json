@@ -1,6 +1,6 @@
 {
     "development": {
-      "database": "module3",
+      "database": "nodejs-training",
       "host": "127.0.0.1",
       "dialect": "postgres"
     }

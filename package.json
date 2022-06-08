@@ -4,9 +4,8 @@
   "description": "IN MEMORY CRUD REST SERVICE WITH VALIDATION",
   "main": "index.js",
   "scripts": {
-    "prepare": "npx sequelize-cli db:create",
+    "init-database": "npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "task": "nodemon index.js --exec babel-node --presets babel-preset-env",
-    "task2": "nodemon index2.js --exec babel-node --presets babel-preset-env",
     "eslint": "npx eslint index.js && npx eslint routes/users.js"
   },
   "repository": {

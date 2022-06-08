@@ -44,3 +44,22 @@ Add server-side validation for create/update operations of Userentity:
     •user’s age must be between 4 and 130.
 In case of any property does not meet the validation requirements or the field is absent, return 400 (Bad Request) and detailed error message.
 For requests validation use special packages like joi (https://github.com/hapijs/joi,https://www.npmjs.com/package/express-joi-validation).
+
+--- --- --- ---
+
+#TASK 3.1
+•Install DB PostgreSQL on your machine or use a free web hosting services for PostgreSQL (https://www.heroku.com/postgresor https://www.elephantsql.com/plans.html).
+•Write SQL script which will create Users table in the DB and fillit in with predefined users’collection.•Configure your REST service to work with PostgreSQL.
+−Use the sequelize package(http://docs.sequelizejs.com/)as ORM to work with PostgreSQL.As an alternative to sequelizeyou can use more low-level query-builderlibrary(http://knexjs.org/).
+
+#TASK 3.2
+The service should adhere to 3-layer architecture principles (https://softwareontheroad.com/ideal-nodejs-project-structure/) and contain the following set of directories:|-routers / controllers|-services|-data-access|-models
+
+
+#How to run tasks 3.1-3.2
+
+Run the following commands
+1) npm run init-database
+2) npm run task
+3) 
+First command will create database, table and fill it with test data

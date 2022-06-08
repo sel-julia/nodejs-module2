@@ -3,7 +3,7 @@ import Sequelize from 'sequelize';
 import getUserModel from './User';
 
 const sequelize = new Sequelize(
-    'module3', null, null,
+    'nodejs-training', null, null,
     {
         dialect: 'postgres'
     }
