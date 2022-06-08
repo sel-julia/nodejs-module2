@@ -1,11 +1,10 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const usersRoute = require('./routes/users');
-const app = express();
-const eraseDatabaseOnSync = true;
+import express from 'express';
+import bodyParser from 'body-parser';
+import usersRoute from './routes/users';
 import { sequelize } from './models';
+const app = express();
 
-sequelize.sync({ force: eraseDatabaseOnSync }).then(() => {
+sequelize.sync().then(() => {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
