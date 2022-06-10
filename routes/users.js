@@ -1,14 +1,12 @@
 import express from 'express';
 import Joi from 'joi';
 import { v4 as uuidv4 } from 'uuid';
-import UserRepository from '../data-access/UserRepository';
 import UserService from '../services/UserService';
 import { Op } from 'sequelize';
 import models from '../models';
 
 const router = express.Router();
-const userRepositoryInstance = new UserRepository(models, Op);
-const userService = new UserService(userRepositoryInstance);
+const userService = new UserService(models.User, Op);
 
 router.get('/', async (req, res) => {
     const users = await userService.findAll();
@@ -78,8 +76,7 @@ const querySchema = Joi.object({
         }
     }).required(),
     password: Joi.string().regex(/([A-Za-z]+[0-9]|[0-9]+[A-Za-z])[A-Za-z0-9]*/).required(),
-    age: Joi.number().min(4).max(130).required(),
-    isDeleted: Joi.boolean().required()
+    age: Joi.number().min(4).max(130).required()
 });
 
 // schema options

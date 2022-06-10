@@ -8,8 +8,7 @@ Content-Type: application/json
 {
     "login": "111",
     "password": "1111password",
-    "age": 12,
-    "isDeleted": false
+    "age": 12
 }
 
 ### get user
@@ -22,8 +21,7 @@ Content-Type: application/json
 {
     "login": "login_edited",
     "password": "password_edited2",
-    "age": 122,
-    "isDeleted": false
+    "age": 122
 }
 
 ### delete user

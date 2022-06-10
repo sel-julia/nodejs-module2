@@ -18,11 +18,9 @@ const getUserModel = (sequelize, { DataTypes }) => {
         age: {
             type: DataTypes.INTEGER,
             allowNull: false
-        },
-        isDeleted: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false
         }
+    }, {
+        timestamps: false
     });
 
     return User;
