@@ -61,5 +61,6 @@ The service should adhere to 3-layer architecture principles (https://softwareon
 Run the following commands
 1) npm run init-database
 2) npm run task
-3) 
-First command will create database, table and fill it with test data
+
+First command will create database
+To create table Users and fill it with data, use data-access/script.sql
