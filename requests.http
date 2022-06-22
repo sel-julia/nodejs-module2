@@ -6,10 +6,9 @@ POST http://localhost:3400/users
 Content-Type: application/json
 
 {
-    "login": "loginw",
-    "password": "password123",
-    "age": 12,
-    "isDeleted": false
+    "login": "111",
+    "password": "1111password",
+    "age": 12
 }
 
 ### get user
@@ -22,12 +21,11 @@ Content-Type: application/json
 {
     "login": "login_edited",
     "password": "password_edited2",
-    "age": 122,
-    "isDeleted": false
+    "age": 122
 }
 
 ### delete user
-DELETE http://localhost:3400/users/c7c6742a-19ce-4a74-a0c9-e04464d6fd91
+DELETE http://localhost:3400/users/3a614b2f-088d-4ea2-bc54-6b0955a848a8
 
 ### get user
 GET http://localhost:3400/users/c7c6742a-19ce-4a74-a0c9-e04464d6fd91
