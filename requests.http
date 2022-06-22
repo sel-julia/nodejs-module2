@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### get user
-GET http://localhost:3400/users/c7c6742a-19ce-4a74-a0c9-e04464d6fd91
+GET http://localhost:3400/users/e5cf5c3b-0adb-4f94-8c08-1a4cfe319807
 
 ### update user
 PUT http://localhost:3400/users/c7c6742a-19ce-4a74-a0c9-e04464d6fd91
@@ -25,10 +25,41 @@ Content-Type: application/json
 }
 
 ### delete user
-DELETE http://localhost:3400/users/3a614b2f-088d-4ea2-bc54-6b0955a848a8
+DELETE http://localhost:3400/users/c2b32c50-f6bf-498f-aa3d-032582b4c20d
 
 ### get user
 GET http://localhost:3400/users/c7c6742a-19ce-4a74-a0c9-e04464d6fd91
 
 ### get auto suggest users
 GET http://localhost:3400/users/autoSuggestUsers?loginSubstring=log&limit=12
+
+
+### get all groups
+GET http://localhost:3400/groups
+
+### get group by id
+GET http://localhost:3400/groups/4e9b79a0-90ce-42bc-9b80-6f6d07a3e721
+
+### add group
+POST http://localhost:3400/groups
+Content-Type: application/json
+
+{
+    "name": "second group",
+    "permissions": ["READ", "WRITE"]
+}
+
+### edit group
+PUT http://localhost:3400/groups/356506c5-f96d-453d-a868-2c75c46bacd0
+Content-Type: application/json
+
+{
+    "name": "second group (edited)"
+}
+
+### delete group 
+DELETE http://localhost:3400/groups/fdec3ade-0e31-4966-8176-9d3c8a134217
+
+
+### add user to group˚
+POST http://localhost:3400/groups/467b6c2f-0f56-4ce0-9cf3-5c284206350c/addUser/abb2f5d7-aa13-4c92-97f5-1dde6fb00d0b
