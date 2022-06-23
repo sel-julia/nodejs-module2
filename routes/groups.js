@@ -1,5 +1,4 @@
 import express from 'express';
-import Joi from 'joi';
 import { v4 as uuidv4 } from 'uuid';
 import GroupService from '../services/GroupService';
 import UserService from '../services/UserService';
@@ -59,10 +58,11 @@ router.delete('/:groupId', async (req, res) => {
     res.end();
 });
 
-router.post('/:groupId/addUser/:userId', async(req, res) => {
+router.post('/:groupId/addUsers', async (req, res) => {
     const groupId = req.params.groupId;
-    const userId = req.params.userId;
-    addUsersToGroup(groupId, [userId]);
+    const userIds = req.body.userIds;
+
+    addUsersToGroup(groupId, userIds);
     res.end();
 });
 

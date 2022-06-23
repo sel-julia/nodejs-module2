@@ -38,7 +38,7 @@ GET http://localhost:3400/users/autoSuggestUsers?loginSubstring=log&limit=12
 GET http://localhost:3400/groups
 
 ### get group by id
-GET http://localhost:3400/groups/4e9b79a0-90ce-42bc-9b80-6f6d07a3e721
+GET http://localhost:3400/groups/467b6c2f-0f56-4ce0-9cf3-5c284206350c
 
 ### add group
 POST http://localhost:3400/groups
@@ -62,4 +62,11 @@ DELETE http://localhost:3400/groups/fdec3ade-0e31-4966-8176-9d3c8a134217
 
 
 ### add user to group˚
-POST http://localhost:3400/groups/467b6c2f-0f56-4ce0-9cf3-5c284206350c/addUser/abb2f5d7-aa13-4c92-97f5-1dde6fb00d0b
+POST http://localhost:3400/groups/60381cdc-944e-4e19-8984-8cc71bc6eb76/addUsers
+Content-Type: application/json
+
+{
+    "userIds": [
+        "484634ba-df39-41c7-b6d2-49f36c8733df", "584634ba-df39-41c7-b6d2-49f36c8733df"
+    ]
+}
