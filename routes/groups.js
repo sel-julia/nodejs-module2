@@ -73,13 +73,18 @@ async function addUsersToGroup(groupId, userIds) {
 
     if (group !== undefined) {
         try {
-            userIds.forEach(async userId => {
+            const users = [];
+            for (const userId of userIds) {
                 const user = await userService.findById(userId);
 
                 if (user !== undefined) {
-                    group.addUser(user);
+                    users.push(user);
                 }
-            });
+            }
+
+            if (users.length !== 0) {
+                group.addUsers(users);
+            }
             await t.commit();
         } catch (error) {
             await t.rollback();
