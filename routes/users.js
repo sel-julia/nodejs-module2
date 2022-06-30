@@ -6,7 +6,7 @@ import { Op } from 'sequelize';
 import models from '../models';
 
 const router = express.Router();
-const userService = new UserService(models.User, Op);
+const userService = new UserService(models.User, Op, models.Group);
 
 router.get('/', async (req, res) => {
     const users = await userService.findAll();

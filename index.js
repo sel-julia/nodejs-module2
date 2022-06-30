@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import usersRoute from './routes/users';
+import groupsRoute from './routes/groups';
 import { sequelize } from './models';
 const app = express();
 
@@ -9,6 +10,7 @@ sequelize.sync().then(() => {
     app.use(bodyParser.json());
 
     app.use('/users', usersRoute);
+    app.use('/groups', groupsRoute);
 
     app.use((error, req, res) => {
         return res.status(500)

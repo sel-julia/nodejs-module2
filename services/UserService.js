@@ -1,15 +1,20 @@
 export default class UserService {
-    constructor(userModel, Op) {
+    constructor(userModel, Op, groupModel) {
         this.userModel = userModel;
         this.Op = Op;
+        this.groupModel = groupModel;
     }
 
     async findAll() {
-        return await this.userModel.findAll();
+        return await this.userModel.findAll({
+            include: this.groupModel
+        });
     }
 
     async findById(userId) {
-        return await this.userModel.findByPk(userId);
+        return await this.userModel.findByPk(userId, {
+            include: this.groupModel
+        });
     }
 
     async findForAutoSuggest(subString, limit) {
