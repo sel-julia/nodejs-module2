@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import UserService from '../services/UserService';
 import { Op } from 'sequelize';
 import models from '../models';
-require('express-async-errors');
+import 'express-async-errors';
 
 const router = express.Router();
 const userService = new UserService(models.User, Op, models.Group);

@@ -4,7 +4,7 @@ import GroupService from '../services/GroupService';
 import UserService from '../services/UserService';
 import { Op } from 'sequelize';
 import models, { sequelize } from '../models';
-require('express-async-errors');
+import 'express-async-errors';
 
 const router = express.Router();
 const groupService = new GroupService(models.Group, Op, models.User);
