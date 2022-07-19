@@ -6,6 +6,8 @@ import { sequelize } from './models';
 import appLogger from './middlewars/AppLogger';
 import errorLoger from './middlewars/ErrorLogger';
 import logger from './logger/Logger';
+import auth from './middlewars/AuthMiddleware';
+import cors from 'cors';
 
 const app = express();
 
@@ -25,6 +27,8 @@ sequelize.sync().then(() => {
     app.use(bodyParser.json());
 
     app.use(appLogger);
+    app.use(auth);
+    app.use(cors());
 
     app.use('/users', usersRoute);
     app.use('/groups', groupsRoute);
