@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import usersRoute from './routes/users';
+import authRoute from './routes/auth';
 import groupsRoute from './routes/groups';
 import { sequelize } from './models';
 import appLogger from './middlewars/AppLogger';
@@ -27,6 +28,7 @@ sequelize.sync().then(() => {
     app.use(bodyParser.json());
 
     app.use(appLogger);
+    app.use('/auth', authRoute);
     app.use(auth);
     app.use(cors());
 

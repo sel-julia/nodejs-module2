@@ -5,11 +5,9 @@ import UserService from '../services/UserService';
 import { Op } from 'sequelize';
 import models from '../models';
 import 'express-async-errors';
-import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 const userService = new UserService(models.User, Op, models.Group);
-const secret = 'node_mentoring_secret';
 
 router.get('/', async (req, res) => {
     const users = await userService.findAll();
@@ -66,23 +64,6 @@ router.delete('/:userId', async (req, res) => {
 
     userService.delete(user);
     res.end();
-});
-
-router.post('/login', async (req, res) => {
-    const body = req.body;
-    const username = body.username;
-    const password = body.password;
-    const user = await userService.findByUserNameAndPassword(username, password);
-    if (user.length === 1) {
-        const payload = { sub: user.age, title: user.username };
-        const token = jwt.sign(payload, secret, { expiresIn: 120 });
-        res.send(token);
-    } else {
-        res.status(401).send({
-            success: false,
-            message: 'Bad username/password combination'
-        });
-    }
 });
 
 // Validation

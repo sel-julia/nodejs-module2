@@ -3,12 +3,6 @@ import jwt from 'jsonwebtoken';
 const secret = 'node_mentoring_secret';
 
 const auth = (req, res, next) => {
-    const url = req.url;
-
-    if (url === '/users/login') {
-        return next();
-    }
-
     const token = req.header('x-access-token');
     if (!token) {
         return res.status(401).send({
