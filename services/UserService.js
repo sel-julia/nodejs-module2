@@ -30,6 +30,15 @@ export default class UserService {
         });
     }
 
+    async findByUserNameAndPassword(userName, password) {
+        return await this.userModel.findAll({
+            where: {
+                login: userName,
+                password
+            }
+        });
+    }
+
     async create(user) {
         return await this.userModel.create(user);
     }

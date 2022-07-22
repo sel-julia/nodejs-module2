@@ -1,11 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import usersRoute from './routes/users';
+import authRoute from './routes/auth';
 import groupsRoute from './routes/groups';
 import { sequelize } from './models';
 import appLogger from './middlewars/AppLogger';
 import errorLoger from './middlewars/ErrorLogger';
 import logger from './logger/Logger';
+import auth from './middlewars/AuthMiddleware';
+import cors from 'cors';
 
 const app = express();
 
@@ -25,6 +28,9 @@ sequelize.sync().then(() => {
     app.use(bodyParser.json());
 
     app.use(appLogger);
+    app.use('/auth', authRoute);
+    app.use(auth);
+    app.use(cors());
 
     app.use('/users', usersRoute);
     app.use('/groups', groupsRoute);
