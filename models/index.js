@@ -1,12 +1,13 @@
 import Sequelize from 'sequelize';
+import 'dotenv/config';
 
 import getUserModel from './User';
 import getGroupModel from './Group';
 
 const sequelize = new Sequelize(
-    'nodejs-training', null, null,
+    process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD,
     {
-        dialect: 'postgres'
+        dialect: process.env.DB_DIALECT
     }
 );
 
