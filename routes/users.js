@@ -1,70 +1,32 @@
 import express from 'express';
 import Joi from 'joi';
-import { v4 as uuidv4 } from 'uuid';
 import UserService from '../services/UserService';
 import { Op } from 'sequelize';
 import models from '../models';
 import 'express-async-errors';
+import {
+    getAllUsers,
+    findUserById,
+    createUser,
+    autoSuggestUsers,
+    updateUser,
+    deleteUser
+} from '../controllers/UserController';
 
 const router = express.Router();
 const userService = new UserService(models.User, Op, models.Group);
 
-router.get('/', async (req, res) => {
-    const users = await userService.findAll();
-    res.json(users);
-});
+router.get('/', getAllUsers);
 
-router.post('/', validator, async (req, res) => {
-    const body = req.body;
-    body.id = uuidv4();
-    const user = await userService.create(body);
-    res.json(user);
-});
+router.post('/', validator, createUser);
 
-router.get('/autoSuggestUsers', async (req, res) => {
-    const loginSubstring = req.query.loginSubstring;
-    const limit = req.query.limit;
-    const users = await userService.findForAutoSuggest(loginSubstring, limit);
+router.get('/autoSuggestUsers', autoSuggestUsers);
 
-    res.json(users);
-});
+router.get('/:userId', findUserById);
 
-router.get('/:userId', async (req, res) => {
-    const userId = req.params.userId;
-    const user = await userService.findById(userId);
+router.put('/:userId', validator, updateUser);
 
-    if (user === null) {
-        res.status(404).send(`User with id ${userId} is not found`);
-    } else {
-        res.json(user);
-    }
-});
-
-router.put('/:userId', validator, async (req, res) => {
-    const userId = req.params.userId;
-    const body = req.body;
-    const user = await userService.findById(userId);
-
-    if (user) {
-        body.id = userId;
-        const updatedUser = userService.update(body);
-        res.json(updatedUser);
-    } else {
-        res.status(404).send(`User with id ${userId} is not found`);
-    }
-});
-
-router.delete('/:userId', async (req, res) => {
-    const userId = req.params.userId;
-    const user = await userService.findById(userId);
-
-    if (user === undefined) {
-        res.status(404).send(`User with id ${userId} is not found`);
-    }
-
-    userService.delete(user);
-    res.end();
-});
+router.delete('/:userId', deleteUser);
 
 // Validation
 

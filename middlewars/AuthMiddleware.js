@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
-
-const secret = 'node_mentoring_secret';
+import 'dotenv/config';
 
 const auth = (req, res, next) => {
     const token = req.header('x-access-token');
@@ -11,7 +10,7 @@ const auth = (req, res, next) => {
         });
     }
 
-    return jwt.verify(token, secret, (error) => {
+    return jwt.verify(token, process.env.secret, (error) => {
         if (error) {
             return res.status(403).send({
                 success: false,
